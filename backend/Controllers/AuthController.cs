@@ -52,7 +52,7 @@ namespace Controllers
             try
             {
                 await _authService.LogoutAsync(request.RefreshToken);
-                return Ok();
+                return NoContent();
             }
             catch (Exception err)
             {

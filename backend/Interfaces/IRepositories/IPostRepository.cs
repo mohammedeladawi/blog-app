@@ -10,6 +10,8 @@ namespace Interfaces.IRepositories
 
         Task<Post?> GetBySlugAsync(string slug);
 
+        Task<Post?> GetByIdAsync(int postId);
+
         Task<bool> UpdateAsync(Post post);
 
         Task<bool> DeleteByIdAsync(int postId);

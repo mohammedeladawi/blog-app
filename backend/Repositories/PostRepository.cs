@@ -24,8 +24,8 @@ namespace Repositories
         public async Task<int> AddAsync(Post post)
         {
             string cmdText = @"
-                Insert into Posts (Title, Slug, Content, Summary, ImageUrl, CreatedAt)
-                Values (@Title, @Slug, @Content, @Summary, @ImageUrl, @CreatedAt);
+                Insert into Posts (Title, Slug, Content, Summary, ImageUrl, CreatedAt, UserId)
+                Values (@Title, @Slug, @Content, @Summary, @ImageUrl, @CreatedAt, @UserId);
                 Select SCOPE_IDENTITY();
             ";
 
@@ -38,6 +38,8 @@ namespace Repositories
             command.Parameters.AddWithValue("@Summary", post.Summary);
             command.Parameters.AddWithValue("@ImageUrl", post.ImageUrl ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@CreatedAt", post.CreatedAt);
+            command.Parameters.AddWithValue("@UserId", post.Author.Id);
+
 
             try
             {
@@ -56,17 +58,19 @@ namespace Repositories
         {
             string cmdText = @"
                 Select 
-                    Id, 
-                    Title, 
-                    Slug, 
-                    Content, 
-                    Summary, 
-                    ImageUrl, 
-                    CreatedAt, 
-                    UpdatedAt, 
-                    UserId
-                From Posts
-                Where Slug = @Slug;
+                    P.Id, 
+                    P.Title, 
+                    P.Slug, 
+                    P.Content, 
+                    P.Summary, 
+                    P.ImageUrl, 
+                    P.CreatedAt, 
+                    P.UpdatedAt, 
+                    U.Id as AuthorId,
+                    U.Username as AuthorName
+                From Posts P
+                INNER JOIN Users U ON P.UserId = U.Id
+                Where P.Slug = @Slug;
             ";
 
             await using var connection = new SqlConnection(_connectionString);
@@ -89,7 +93,66 @@ namespace Repositories
                         ImageUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
                         CreatedAt = reader.GetDateTime(6),
                         UpdatedAt = reader.GetDateTime(7),
-                        UserId = reader.GetInt32(8)
+                        Author = new User
+                        {
+                            Id = reader.GetInt32(8),
+                            Username = reader.GetString(9)
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving post by slug from database.");
+            }
+
+            return null;
+        }
+
+        public async Task<Post?> GetByIdAsync(int postId)
+        {
+            string cmdText = @"
+                Select 
+                    P.Id, 
+                    P.Title, 
+                    P.Slug, 
+                    P.Content, 
+                    P.Summary, 
+                    P.ImageUrl, 
+                    P.CreatedAt, 
+                    P.UpdatedAt, 
+                    U.Id as AuthorId,
+                    U.Username as AuthorName
+                From Posts P
+                INNER JOIN Users U ON P.UserId = U.Id
+                Where P.Id = @PostId;
+            ";
+
+            await using var connection = new SqlConnection(_connectionString);
+            await using var command = new SqlCommand(cmdText, connection);
+
+            command.Parameters.AddWithValue("@PostId", postId);
+            try
+            {
+                await connection.OpenAsync();
+                await using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    return new Post
+                    {
+                        Id = reader.GetInt32(0),
+                        Title = reader.GetString(1),
+                        Slug = reader.GetString(2),
+                        Content = reader.GetString(3),
+                        Summary = reader.GetString(4),
+                        ImageUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        CreatedAt = reader.GetDateTime(6),
+                        UpdatedAt = reader.GetDateTime(7),
+                        Author = new User
+                        {
+                            Id = reader.GetInt32(8),
+                            Username = reader.GetString(9)
+                        }
                     };
                 }
             }
@@ -120,30 +183,30 @@ namespace Repositories
             }
         }
 
-        public async Task<IEnumerable<Post>> GetPostsAsync(int skip, int limit)
+        public async Task<IEnumerable<Post>> GetPostsAsync(int offset, int limit)
         {
             var posts = new List<Post>();
 
             string cmdText = @"
                 SELECT 
-                    Id, 
-                    Title, 
-                    Slug, 
-                    Content, 
-                    Summary, 
-                    ImageUrl, 
-                    CreatedAt, 
-                    UpdatedAt, 
-                    UserId
-                From Posts
-                ORDER BY CreatedAt DESC
-                OFFSET @Skip ROWS
-                FETCH NEXT @Limit ONLY;
+                    P.Id, 
+                    P.Title, 
+                    P.Slug, 
+                    P.Summary, 
+                    P.ImageUrl, 
+                    P.CreatedAt, 
+                    U.Id as AuthorId,
+                    U.Username as AuthorName
+                From Posts P
+                INNER JOIN Users U ON P.UserId = U.Id
+                ORDER BY P.CreatedAt DESC
+                OFFSET @Offset ROWS
+                FETCH NEXT @Limit Rows ONLY;
             ";
 
             await using var connection = new SqlConnection(_connectionString);
             await using var command = new SqlCommand(cmdText, connection);
-            command.Parameters.AddWithValue("@Skip", skip);
+            command.Parameters.AddWithValue("@Offset", offset);
             command.Parameters.AddWithValue("@Limit", limit);
 
             try
@@ -157,12 +220,14 @@ namespace Repositories
                         Id = reader.GetInt32(0),
                         Title = reader.GetString(1),
                         Slug = reader.GetString(2),
-                        Content = reader.GetString(3),
-                        Summary = reader.GetString(4),
-                        ImageUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
-                        CreatedAt = reader.GetDateTime(6),
-                        UpdatedAt = reader.GetDateTime(7),
-                        UserId = reader.GetInt32(8)
+                        Summary = reader.GetString(3),
+                        ImageUrl = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        CreatedAt = reader.GetDateTime(5),
+                        Author = new User
+                        {
+                            Id = reader.GetInt32(6),
+                            Username = reader.GetString(7)
+                        }
                     });
                 }
             }
@@ -200,16 +265,63 @@ namespace Repositories
             return false;
         }
 
-
-        //====== Todo: Implement these methods ======
-        public Task<bool> DeleteByIdAsync(int postId)
+        public async Task<bool> DeleteByIdAsync(int postId)
         {
-            throw new NotImplementedException();
+            string cmdText = @"
+                DELETE FROM Posts
+                WHERE Id = @PostId;
+            ";
+
+            await using var connection = new SqlConnection(_connectionString);
+            await using var command = new SqlCommand(cmdText, connection);
+            command.Parameters.AddWithValue("@PostId", postId);
+
+            try
+            {
+                await connection.OpenAsync();
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting post from database.");
+                return false;
+            }
         }
 
-        public Task<bool> UpdateAsync(Post post)
+        public async Task<bool> UpdateAsync(Post post)
         {
-            throw new NotImplementedException();
+            string cmdText = @"
+                UPDATE Posts
+                SET Title = @Title,
+                    Slug = @Slug,
+                    Content = @Content,
+                    Summary = @Summary,
+                    ImageUrl = @ImageUrl,
+                    UpdatedAt = @UpdatedAt
+                WHERE Id = @Id;
+            ";
+
+            await using var connection = new SqlConnection(_connectionString);
+            await using var command = new SqlCommand(cmdText, connection);
+            command.Parameters.AddWithValue("@Title", post.Title);
+            command.Parameters.AddWithValue("@Slug", post.Slug);
+            command.Parameters.AddWithValue("@Content", post.Content);
+            command.Parameters.AddWithValue("@Summary", post.Summary);
+            command.Parameters.AddWithValue("@ImageUrl", post.ImageUrl ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@UpdatedAt", post.UpdatedAt);
+            command.Parameters.AddWithValue("@Id", post.Id);
+            try
+            {
+                await connection.OpenAsync();
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating post in database.");
+                return false;
+            }
         }
     }
 }

@@ -20,12 +20,14 @@ builder.Services.AddSwaggerGen();
 //========= Repositories DI =========
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 //========= Services DI =========
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IAccessTokenService, AccessTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 //========= Options DI =========
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));

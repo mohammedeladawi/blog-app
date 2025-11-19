@@ -1,6 +1,6 @@
-namespace Models
+namespace DTOs
 {
-    public class Post
+    public class SpecificPostDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -10,7 +10,7 @@ namespace Models
         public string ImageUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public User Author { get; set; }
+        public UserDto Author { get; set; }
 
     }
 }
