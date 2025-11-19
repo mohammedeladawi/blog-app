@@ -11,10 +11,10 @@ using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-// Enable Swagger via Swashbuckle
+
+builder.Services.AddCors();
 builder.Services.AddSwaggerGen();
 
 //========= Repositories DI =========
@@ -67,6 +67,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    );
 
 app.UseAuthentication();
 app.UseAuthorization();
