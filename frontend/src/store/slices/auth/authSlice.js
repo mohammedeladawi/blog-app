@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getTokensFromLocalStorage,
   getUsernameFromToken,
+  removeTokensFromLocalStorage,
   saveTokensToLocalStorage,
 } from "helpers/tokensUtils";
 import { loginAsync, logoutAsync, signUpAsync } from "./authThunks";
@@ -37,6 +38,13 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    clearAuthState: (state) => {
+      state.tokens = null;
+      state.isAuthenticated = false;
+      state.username = null;
+      state.loading = false;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,13 +69,14 @@ const authSlice = createSlice({
         state.tokens = null;
         state.username = null;
         state.isAuthenticated = false;
+        removeTokensFromLocalStorage();
       })
       .addCase(logoutAsync.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });
 
-export const { loadTokensFromLocalStorage } = authSlice.actions;
+export const { loadTokensFromLocalStorage, clearAuthState } = authSlice.actions;
 export default authSlice.reducer;

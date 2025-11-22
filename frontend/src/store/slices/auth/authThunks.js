@@ -8,21 +8,30 @@ export const loginAsync = createAsyncThunk(
       const tokens = await login(loginCreds);
       return tokens;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || "An error occurred");
+      return rejectWithValue(error?.response?.data || "Login failed");
     }
   }
 );
 
 export const signUpAsync = createAsyncThunk(
   "auth/signup",
-  async (singUpCreds) => {
-    await signUp(singUpCreds);
+  async (singUpCreds, { rejectWithValue }) => {
+    try {
+      await signUp(singUpCreds);
+    } catch (err) {
+      return rejectWithValue(err?.response?.data || "Sign Up failed");
+    }
   }
 );
 
 export const logoutAsync = createAsyncThunk(
   "auth/logout",
-  async (refreshToken) => {
-    await logout(refreshToken);
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const refreshToken = getState().auth.tokens.refreshToken;
+      await logout({ refreshToken });
+    } catch (err) {
+      return rejectWithValue(err?.response?.data || "Logout failed");
+    }
   }
 );
