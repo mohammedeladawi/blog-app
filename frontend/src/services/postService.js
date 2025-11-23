@@ -1,11 +1,11 @@
 import axiosInstance from "./axiosConfig";
 
-const getTopPosts = async () => {
+const getLatestPosts = async () => {
   const response = await axiosInstance.get("post/top");
   return response.data;
 };
 
-const getPosts = async (offset, limit) => {
+const getPaginatedPosts = async (offset, limit) => {
   const response = await axiosInstance.get("post", {
     params: { offset, limit },
   });
@@ -22,4 +22,4 @@ const createPost = async (postData) => {
   return response.data;
 };
 
-export { getTopPosts, getPosts, getPostBySlug, createPost };
+export { getLatestPosts, getPaginatedPosts, getPostBySlug, createPost };

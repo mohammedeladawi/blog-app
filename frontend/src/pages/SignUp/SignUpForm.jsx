@@ -38,7 +38,11 @@ const SignUpForm = () => {
   });
 
   return (
-    <Form className="border my-4 p-4" onSubmit={formik.handleSubmit}>
+    <Form
+      style={{ maxWidth: "450px" }}
+      className="border p-4 my-4 mx-auto"
+      onSubmit={formik.handleSubmit}
+    >
       {auth.error && <Alert variant="danger">{auth.error}</Alert>}
       <InputField
         label="Username"

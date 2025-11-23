@@ -5,9 +5,7 @@ const AuthLayout = () => {
   return (
     <>
       <AuthHeader />
-      <main
-        className={`auth-page d-flex justify-content-center align-items-center}`}
-      >
+      <main>
         <Outlet />
       </main>
     </>

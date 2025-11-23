@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearAuthState, resetState } from "store/slices/auth/authSlice";
 import { loginAsync } from "store/slices/auth/authThunks";
 import { loginScheme } from "validation/authValidation";
-import * as Yup from "yup";
 
 const LoginForm = () => {
   const auth = useSelector((s) => s.auth);
@@ -29,7 +28,11 @@ const LoginForm = () => {
     },
   });
   return (
-    <Form className="border p-4 my-4" onSubmit={formik.handleSubmit}>
+    <Form
+      style={{ maxWidth: "400px" }}
+      className="border p-4 my-4 mx-auto"
+      onSubmit={formik.handleSubmit}
+    >
       {auth.error && <Alert variant="danger">{auth.error}</Alert>}
       <InputField
         label="Username"
