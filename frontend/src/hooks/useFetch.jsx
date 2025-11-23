@@ -6,24 +6,24 @@ const fetchTypes = {
   REJECTED: "REJECTED",
 };
 
+const initialState = {
+  data: null,
+  loading: false,
+  error: null,
+};
+
 const reducer = (state, action) => {
   switch (action.type) {
-    case "PENDING":
+    case fetchTypes.PENDING:
       return { ...state, loading: true, error: null };
-    case "FULFILLED":
+    case fetchTypes.FULFILLED:
       return { ...state, loading: false, data: action.payload };
-    case "REJECTED":
+    case fetchTypes.REJECTED:
       return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
   }
-};
-
-const initialState = {
-  data: null,
-  loading: false,
-  error: null,
 };
 
 const useFetch = (fetchFn, deps = []) => {
@@ -39,7 +39,6 @@ const useFetch = (fetchFn, deps = []) => {
         dispatch({ type: fetchTypes.REJECTED, payload: err?.response?.data });
       }
     };
-
     fetchData();
   }, deps);
 

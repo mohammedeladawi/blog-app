@@ -25,7 +25,7 @@ namespace Controllers
         {
             try
             {
-                var posts = await _postService.GetPostsAsync(0, 5);
+                var posts = await _postService.GetPostsAsync(0, 4);
                 return Ok(posts);
             }
             catch (Exception ex)

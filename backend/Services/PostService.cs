@@ -120,6 +120,7 @@ namespace Services
                 Slug = post.Slug,
                 Summary = post.Summary,
                 ImageUrl = post.ImageUrl,
+                CreatedAt = post.CreatedAt,
                 Author = new UserDto
                 {
                     Id = post.Author.Id,
