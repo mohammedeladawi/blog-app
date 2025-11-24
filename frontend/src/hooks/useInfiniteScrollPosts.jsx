@@ -21,7 +21,6 @@ const useInfiniteScrollPosts = (initialOffset = 0, limit = 8) => {
 
   useEffect(() => {
     if (!data) return;
-    console.log(data);
 
     if (Array.isArray(data.posts) && data.posts.length > 0) {
       setPosts((prev) => {

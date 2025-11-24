@@ -1,8 +1,9 @@
-import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import PostCard from "components/common/PostCard";
 import { getLatestPosts } from "services/postService";
 import useFetch from "hooks/useFetch";
+import LoadingSpinner from "components/common/LoadingSpinner";
 
 const LatestPosts = () => {
   const navigate = useNavigate();
@@ -13,41 +14,36 @@ const LatestPosts = () => {
       <Container>
         <h3 className="text-center"> Latest Article</h3>
 
+        {/* Loading */}
+        {loading && <LoadingSpinner />}
+
+        {/* Error Message */}
+        {!loading && error && (
+          <div className="text-center my-3">
+            <Alert>{error}</Alert>
+          </div>
+        )}
+
+        {/* No Posts */}
+        {!loading && !error && !posts && (
+          <div className="text-center my-3">
+            <p>There is no posts</p>
+          </div>
+        )}
+
         <Row className="g-4 my-4">
-          {loading && (
-            <Col className="text-center">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
+          {posts?.map((post) => (
+            <Col xs={12} sm={6} lg={3} key={post.id}>
+              <PostCard
+                slug={post.slug}
+                imgUrl={post.imageUrl}
+                title={post.title}
+                summary={post.summary}
+                createdAt={post.createdAt}
+                author={post.author.username}
+              />
             </Col>
-          )}
-
-          {!loading && error && (
-            <Col xs={12}>
-              <Alert className="text-center">{error}</Alert>
-            </Col>
-          )}
-
-          {!loading && !error && !posts && (
-            <Col xs={12}>
-              <p className="text-center">There is no posts</p>
-            </Col>
-          )}
-
-          {!loading &&
-            !error &&
-            posts?.map((post) => (
-              <Col xs={12} sm={6} lg={3} key={post.id}>
-                <PostCard
-                  slug={post.slug}
-                  imgUrl={post.imageUrl}
-                  title={post.title}
-                  summary={post.summary}
-                  createdAt={post.createdAt}
-                  author={post.author.username}
-                />
-              </Col>
-            ))}
+          ))}
         </Row>
 
         <Row className="mt-4">

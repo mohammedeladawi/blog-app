@@ -1,6 +1,7 @@
+import LoadingSpinner from "components/common/LoadingSpinner";
 import PostCard from "components/common/PostCard";
 import useInfiniteScrollPosts from "hooks/useInfiniteScrollPosts";
-import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Alert, Col, Container, Row } from "react-bootstrap";
 
 const Posts = () => {
   const { loading, error, posts, observerRef } = useInfiniteScrollPosts();
@@ -25,25 +26,19 @@ const Posts = () => {
       </Row>
 
       {/* Loading */}
-      {loading && (
-        <div className="text-center my-3">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
+      {loading && <LoadingSpinner />}
 
       {/* Error Message */}
       {!loading && error && (
-        <div>
-          <Alert className="text-center my-3">{error}</Alert>
+        <div className="text-center my-3">
+          <Alert>{error}</Alert>
         </div>
       )}
 
       {/* No Posts */}
       {!loading && !error && !posts && (
-        <div>
-          <p className="text-center my-3">There is no posts</p>
+        <div className="text-center my-3">
+          <p>There is no posts</p>
         </div>
       )}
       <div ref={observerRef} style={{ height: "1px" }}></div>

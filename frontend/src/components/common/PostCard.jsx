@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const PostCard = ({ slug, imgUrl, title, summary, author, createdAt }) => {
   return (
-    <Link to={`posts/${slug}`} className="text-decoration-none">
+    <Link to={`/posts/${slug}`} className="text-decoration-none">
       <Card>
         <Card.Img
           variant="top"
