@@ -15,7 +15,7 @@ const PostCard = ({ slug, imgUrl, title, summary, author, createdAt }) => {
           <Card.Title className="text-truncate">{title}</Card.Title>
           <Card.Text className="text-truncate">{summary}</Card.Text>
 
-          <small className="text-muted d-block mt-2">
+          <small className="text-muted d-block mt-2 text-truncate">
             {author} — {formatDate(createdAt)}
           </small>
         </Card.Body>

@@ -19,7 +19,7 @@ const Hero = () => {
               </p>
               <div className="mt-4">
                 <Button size="lg" onClick={() => navigate("/posts/create")}>
-                  Add new article
+                  Add New Article
                 </Button>
               </div>
             </div>

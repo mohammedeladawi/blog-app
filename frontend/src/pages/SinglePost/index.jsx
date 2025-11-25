@@ -4,6 +4,7 @@ import { Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { getPostBySlug } from "services/postService";
 import PostDetails from "./PostDetails";
+import DangerAlert from "components/common/DangerAlert";
 
 const SinglePost = () => {
   const { slug } = useParams();
@@ -15,11 +16,7 @@ const SinglePost = () => {
       {loading && <LoadingSpinner />}
 
       {/* Error Message */}
-      {!loading && error && (
-        <div className="text-center my-3">
-          <Alert>{error}</Alert>
-        </div>
-      )}
+      {!loading && error && <DangerAlert msg={error} />}
 
       {/*Post Details*/}
       {post && <PostDetails post={post} />}

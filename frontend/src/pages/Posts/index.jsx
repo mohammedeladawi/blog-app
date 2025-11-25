@@ -1,3 +1,4 @@
+import DangerAlert from "components/common/DangerAlert";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import PostCard from "components/common/PostCard";
 import useInfiniteScrollPosts from "hooks/useInfiniteScrollPosts";
@@ -29,11 +30,7 @@ const Posts = () => {
       {loading && <LoadingSpinner />}
 
       {/* Error Message */}
-      {!loading && error && (
-        <div className="text-center my-3">
-          <Alert>{error}</Alert>
-        </div>
-      )}
+      {!loading && error && <DangerAlert msg={error} />}
 
       {/* No Posts */}
       {!loading && !error && !posts && (

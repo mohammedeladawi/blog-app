@@ -12,7 +12,7 @@ const LatestPosts = () => {
   return (
     <section className="py-5">
       <Container>
-        <h3 className="text-center"> Latest Article</h3>
+        <h3 className="text-center"> Latest Articles</h3>
 
         {/* Loading */}
         {loading && <LoadingSpinner />}
@@ -20,7 +20,7 @@ const LatestPosts = () => {
         {/* Error Message */}
         {!loading && error && (
           <div className="text-center my-3">
-            <Alert>{error}</Alert>
+            <Alert variant="danger">{error}</Alert>
           </div>
         )}
 
@@ -46,17 +46,15 @@ const LatestPosts = () => {
           ))}
         </Row>
 
-        <Row className="mt-4">
-          <Col className="text-center">
-            <Button
-              variant="outline-dark"
-              className="px-5"
-              onClick={() => navigate("/posts")}
-            >
-              see all
-            </Button>
-          </Col>
-        </Row>
+        <div className="text-center">
+          <Button
+            variant="outline-dark"
+            className="px-5"
+            onClick={() => navigate("/posts")}
+          >
+            See All
+          </Button>
+        </div>
       </Container>
     </section>
   );

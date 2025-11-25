@@ -1,5 +1,5 @@
 import axios from "axios";
-import { store } from "store";
+import { getTokensFromLocalStorage } from "helpers/tokensUtils";
 // import store from "../store";
 
 const API_BASE_URL = "http://localhost:5287/api";
@@ -14,7 +14,9 @@ const axiosInstance = axios.create({
 // Add token to request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = store.getState().auth.tokens?.accessToken;
+    // Avoid importing the Redux store here to prevent circular imports.
+    // Read tokens directly from localStorage instead.
+    const token = getTokensFromLocalStorage()?.accessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
