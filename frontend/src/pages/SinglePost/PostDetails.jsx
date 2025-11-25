@@ -30,7 +30,7 @@ const PostDetails = ({ post }) => {
       <p className="mb-4">{summary}</p>
 
       <h5 className="mb-3">Content</h5>
-      <p>{content}</p>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
     </Container>
   );
 };

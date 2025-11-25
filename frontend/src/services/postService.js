@@ -22,4 +22,15 @@ const createPost = async (postData) => {
   return response.data;
 };
 
-export { getLatestPosts, getPaginatedPosts, getPostBySlug, createPost };
+const deletePost = async (postId) => {
+  const response = await axiosInstance.delete(`post/${postId}`);
+  return response.data;
+};
+
+export {
+  getLatestPosts,
+  getPaginatedPosts,
+  getPostBySlug,
+  createPost,
+  deletePost,
+};

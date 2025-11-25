@@ -1,29 +1,65 @@
 import DangerAlert from "components/common/DangerAlert";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import PostCard from "components/common/PostCard";
+import OptionsMenu from "components/common/PostCard/OptionsMenu";
 import useInfiniteScrollPosts from "hooks/useInfiniteScrollPosts";
-import { Alert, Col, Container, Row } from "react-bootstrap";
+import { useCallback } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
+import { deletePost } from "services/postService";
 
 const Posts = () => {
-  const { loading, error, posts, observerRef } = useInfiniteScrollPosts();
+  const { loading, error, posts, observerRef, refetch } =
+    useInfiniteScrollPosts();
+
+  const loggedInUserId = useSelector((s) => s.auth.userId);
+
+  const handleDelete = useCallback(
+    async (id) => {
+      try {
+        // delete
+        await deletePost(id);
+        // refetch
+        refetch();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [refetch]
+  );
+
+  const handleEdit = useCallback((id) => {
+    console.log(id);
+  }, []);
+
   return (
     <Container>
       <h3 className="text-center my-4"> Latest Posts</h3>
 
+      {/* Posts */}
       <Row className="g-4">
-        {/* Posts */}
-        {posts?.map((post) => (
-          <Col xs={12} sm={6} lg={3} key={post.id}>
-            <PostCard
-              slug={post.slug}
-              imgUrl={post.imageUrl}
-              title={post.title}
-              summary={post.summary}
-              createdAt={post.createdAt}
-              author={post.author.username}
-            />
-          </Col>
-        ))}
+        {posts?.map(
+          ({ id, slug, imageUrl, title, summary, createdAt, author }) => (
+            <Col xs={12} sm={6} lg={3} key={id}>
+              <PostCard
+                slug={slug}
+                imgUrl={imageUrl}
+                title={title}
+                summary={summary}
+                createdAt={createdAt}
+                author={author.username}
+                createdByUser={loggedInUserId === author.id}
+                renderOptions={() => (
+                  <OptionsMenu
+                    onDelete={() => handleDelete(id)}
+                    onEdit={() => handleEdit(id)}
+                  />
+                )}
+              />
+            </Col>
+          )
+        )}
       </Row>
 
       {/* Loading */}

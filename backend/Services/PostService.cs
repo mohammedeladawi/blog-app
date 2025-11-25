@@ -78,6 +78,7 @@ namespace Services
                 Summary = post.Summary,
                 ImageUrl = post.ImageUrl,
                 CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
                 Author = new UserDto
                 {
                     Id = post.Author.Id,

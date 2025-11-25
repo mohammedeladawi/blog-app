@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getTokensFromLocalStorage,
-  getUsernameFromToken,
+  getUserIdFromToken,
   removeTokensFromLocalStorage,
   saveTokensToLocalStorage,
 } from "helpers/tokensUtils";
@@ -27,7 +27,7 @@ const authSlice = createSlice({
   initialState: {
     tokens: storedTokens,
     isAuthenticated: !!storedTokens,
-    username: getUsernameFromToken(storedTokens?.accessToken),
+    userId: getUserIdFromToken(storedTokens?.accessToken),
     loading: false,
     error: null,
   },
@@ -53,7 +53,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.tokens = action.payload;
         state.isAuthenticated = true;
-        state.username = getUsernameFromToken(action.payload.accessToken);
+        state.username = getUserIdFromToken(action.payload.accessToken);
 
         saveTokensToLocalStorage(action.payload);
       })

@@ -13,12 +13,16 @@ export function removeTokensFromLocalStorage() {
   localStorage.removeItem("tokens");
 }
 
-export function getUsernameFromToken(token) {
+export function getUserIdFromToken(token) {
   if (!token) return null;
 
   try {
     const decoded = jwtDecode(token);
-    return decoded.username;
+    const userId =
+      decoded[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+      ];
+    return parseInt(userId);
   } catch (err) {
     console.error("Invalid token:", err);
     return null;

@@ -1,23 +1,26 @@
 import { getPaginatedPosts } from "services/postService";
 import useFetch from "./useFetch";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const useInfiniteScrollPosts = (initialOffset = 0, limit = 8) => {
   const [posts, setPosts] = useState([]);
   const [offset, setOffset] = useState(initialOffset);
+
+  // helps to refetch data if the initialOffset didn't change yet.
+  const [refetchTrigger, setRefetchTrigger] = useState(false);
 
   const observerRef = useRef(null);
   const isFetchLocked = useRef(false);
 
   const { loading, error, data } = useFetch(
     () => getPaginatedPosts(offset, limit),
-    [offset]
+    [offset, refetchTrigger]
   );
 
   const hasMore = useMemo(() => {
     if (!data?.totalCount) return false;
-    return posts.length < data.totalCount;
-  }, [data, posts]);
+    return posts.length < data.totalCount && data.totalCount > offset + limit;
+  }, [data, posts, offset, limit]);
 
   useEffect(() => {
     if (!data) return;
@@ -34,6 +37,8 @@ const useInfiniteScrollPosts = (initialOffset = 0, limit = 8) => {
   }, [data]);
 
   useEffect(() => {
+    if (loading) return;
+
     const target = observerRef.current;
     if (!target) return;
 
@@ -58,11 +63,18 @@ const useInfiniteScrollPosts = (initialOffset = 0, limit = 8) => {
     return () => observer.disconnect();
   }, [hasMore, limit, loading]);
 
+  const refetch = useCallback(() => {
+    setPosts([]);
+    setOffset(initialOffset);
+    setRefetchTrigger((s) => !s);
+  }, []);
+
   return {
     posts,
     loading,
     error,
     observerRef,
+    refetch,
   };
 };
 

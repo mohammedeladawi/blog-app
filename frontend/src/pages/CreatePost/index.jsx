@@ -4,15 +4,27 @@ import useApi from "hooks/useApi";
 import { createPost } from "services/postService";
 import PostFromFields from "./PostFromFields";
 
-const inititalState = {
-  title: "",
-  summary: "",
-  imageUrl: "",
-  content: "",
+const initialState = {
+  title: "10 Tips for Writing Clean Code",
+  summary:
+    "Learn how to write maintainable, readable, and efficient code with these practical tips.",
+  imageUrl: "https://picsum.photos/600/400?random=10",
+  content: `
+    <p>Writing clean code is essential for maintainability and collaboration.</p>
+    <p>Here are some tips:</p>
+    <ul>
+      <li>Use meaningful variable and function names.</li>
+      <li>Keep functions small and focused.</li>
+      <li>Write comments only when necessary.</li>
+      <li>Follow consistent formatting and styling.</li>
+      <li>Refactor regularly to improve readability.</li>
+    </ul>
+    <p>Implementing these habits will make your code easier to read, debug, and extend.</p>
+  `,
 };
 
 const CreatePost = () => {
-  const [postData, setPostData] = useState(inititalState);
+  const [postData, setPostData] = useState(initialState);
   const { data, loading, error, callApi } = useApi();
 
   const handleChange = (e) => {
@@ -36,7 +48,7 @@ const CreatePost = () => {
           content: postData.content.trim(),
         })
       );
-      if (!error) setPostData(inititalState);
+      if (!error) setPostData(initialState);
     },
     [postData, callApi, error]
   );
@@ -44,7 +56,6 @@ const CreatePost = () => {
   return (
     <section className="py-5">
       <Container>
-        {!loading && error && <Alert variant="danger">{error}</Alert>}
         {!loading && data && (
           <Alert variant="success">Post created successfully!</Alert>
         )}
