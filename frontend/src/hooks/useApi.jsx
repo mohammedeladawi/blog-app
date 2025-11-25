@@ -1,4 +1,6 @@
 import { useCallback, useReducer } from "react";
+import { useDispatch } from "react-redux";
+import { logoutAsync } from "store/slices/auth/authThunks";
 
 const actionTypes = {
   PENDING: "PENDING",
@@ -27,6 +29,7 @@ const reducer = (state, action) => {
 };
 const useApi = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const reduxDispatch = useDispatch();
 
   const callApi = useCallback(
     async (callback) => {
@@ -42,9 +45,11 @@ const useApi = () => {
           payload:
             err?.response?.data || err?.message || "Something went wrong",
         });
+
+        if (err?.response?.status === 401) await reduxDispatch(logoutAsync());
       }
     },
-    [state.loading]
+    [state.loading, reduxDispatch]
   );
 
   return {

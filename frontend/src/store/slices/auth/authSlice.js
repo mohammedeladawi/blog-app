@@ -62,19 +62,7 @@ const authSlice = createSlice({
       .addCase(signUpAsync.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(signUpAsync.rejected, setError)
-      .addCase(logoutAsync.pending, setLoading)
-      .addCase(logoutAsync.fulfilled, (state) => {
-        state.loading = false;
-        state.tokens = null;
-        state.username = null;
-        state.isAuthenticated = false;
-        removeTokensFromLocalStorage();
-      })
-      .addCase(logoutAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+      .addCase(signUpAsync.rejected, setError);
   },
 });
 

@@ -1,5 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  getTokensFromLocalStorage,
+  removeTokensFromLocalStorage,
+} from "helpers/tokensUtils";
 import { login, logout, signUp } from "services/authService";
+import { clearAuthState } from "./authSlice";
 
 export const loginAsync = createAsyncThunk(
   "auth/login",
@@ -26,12 +31,15 @@ export const signUpAsync = createAsyncThunk(
 
 export const logoutAsync = createAsyncThunk(
   "auth/logout",
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
-      const refreshToken = getState().auth.tokens.refreshToken;
+      const refreshToken = getTokensFromLocalStorage()?.refreshToken;
       await logout({ refreshToken });
     } catch (err) {
       return rejectWithValue(err?.response?.data || "Logout failed");
+    } finally {
+      removeTokensFromLocalStorage();
+      dispatch(clearAuthState());
     }
   }
 );

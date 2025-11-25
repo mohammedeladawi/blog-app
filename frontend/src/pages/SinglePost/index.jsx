@@ -1,6 +1,5 @@
 import LoadingSpinner from "components/common/LoadingSpinner";
 import useFetch from "hooks/useFetch";
-import { Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { getPostBySlug } from "services/postService";
 import PostDetails from "./PostDetails";
