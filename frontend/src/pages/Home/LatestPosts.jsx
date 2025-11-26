@@ -1,6 +1,6 @@
 import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import PostCard from "components/common/PostCard";
+import PostCard from "components/post/PostCard";
 import { getLatestPosts } from "services/postService";
 import useFetch from "hooks/useFetch";
 import LoadingSpinner from "components/common/LoadingSpinner";

@@ -1,13 +1,13 @@
 import DangerAlert from "components/common/DangerAlert";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import PostCard from "components/common/PostCard";
-import OptionsMenu from "components/common/PostCard/OptionsMenu";
+import PostCard from "components/post/PostCard";
+import OptionsMenu from "components/post/PostCard/OptionsMenu";
 import useInfiniteScrollPosts from "hooks/useInfiniteScrollPosts";
 import { useCallback } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-import { deletePost } from "services/postService";
+import { deletePost, updatePost } from "services/postService";
 
 const Posts = () => {
   const { loading, error, posts, observerRef, refetch } =
@@ -18,20 +18,28 @@ const Posts = () => {
   const handleDelete = useCallback(
     async (id) => {
       try {
-        // delete
         await deletePost(id);
-        // refetch
         refetch();
       } catch (err) {
+        // ======= Todo: add global alert =======
         console.log(err);
       }
     },
     [refetch]
   );
 
-  const handleEdit = useCallback((id) => {
-    console.log(id);
-  }, []);
+  const handleEdit = useCallback(
+    async (id, updatedPost) => {
+      try {
+        await updatePost(id, updatedPost);
+        refetch();
+      } catch (err) {
+        // ======= Todo: add global alert =======
+        console.log(err);
+      }
+    },
+    [refetch]
+  );
 
   return (
     <Container>
@@ -52,8 +60,9 @@ const Posts = () => {
                 createdByUser={loggedInUserId === author.id}
                 renderOptions={() => (
                   <OptionsMenu
+                    postSlug={slug}
                     onDelete={() => handleDelete(id)}
-                    onEdit={() => handleEdit(id)}
+                    onEdit={(updatedPost) => handleEdit(id, updatedPost)}
                   />
                 )}
               />

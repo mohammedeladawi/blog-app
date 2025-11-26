@@ -1,8 +1,9 @@
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import useApi from "hooks/useApi";
 import { createPost } from "services/postService";
-import PostFromFields from "./PostFromFields";
+import PostFromFields from "../../components/post/PostFormFields";
+import useFormState from "hooks/useFormState";
 
 const initialState = {
   title: "10 Tips for Writing Clean Code",
@@ -24,17 +25,14 @@ const initialState = {
 };
 
 const CreatePost = () => {
-  const [postData, setPostData] = useState(initialState);
+  const {
+    formData: postData,
+    setFormData: setPostData,
+    handleChange,
+    handleValueChange,
+  } = useFormState(initialState);
+
   const { data, loading, error, callApi } = useApi();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPostData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleContentChange = (value) => {
-    setPostData((prev) => ({ ...prev, content: value }));
-  };
 
   const handleSubmit = useCallback(
     async (e) => {
@@ -68,7 +66,7 @@ const CreatePost = () => {
               <PostFromFields
                 postData={postData}
                 handleChange={handleChange}
-                handleContentChange={handleContentChange}
+                handleContentChange={(val) => handleValueChange("content", val)}
               />
 
               <Button

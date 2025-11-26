@@ -1,4 +1,4 @@
-import InputField from "components/common/InputField";
+import InputField from "components/auth/InputField";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Form } from "react-bootstrap";

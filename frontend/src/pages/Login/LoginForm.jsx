@@ -1,9 +1,9 @@
-import InputField from "components/common/InputField";
+import InputField from "components/auth/InputField";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { clearAuthState, resetState } from "store/slices/auth/authSlice";
+import { clearAuthState } from "store/slices/auth/authSlice";
 import { loginAsync } from "store/slices/auth/authThunks";
 import { loginScheme } from "validation/authValidation";
 

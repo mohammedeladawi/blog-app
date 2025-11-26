@@ -4,18 +4,17 @@ const ConfirmModal = ({
   title,
   text,
   onConfirm,
-  show,
-  setShow,
+  onClose,
   variant = "primary",
 }) => {
   return (
-    <Modal show={show} onHide={() => setShow(false)} animation={false}>
+    <Modal show={true} onHide={onClose} animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{text}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShow(false)}>
+        <Button variant="secondary" onClick={onClose}>
           No
         </Button>
         <Button variant={variant} onClick={onConfirm}>

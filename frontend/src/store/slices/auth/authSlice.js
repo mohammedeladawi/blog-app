@@ -2,17 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getTokensFromLocalStorage,
   getUserIdFromToken,
-  removeTokensFromLocalStorage,
   saveTokensToLocalStorage,
 } from "helpers/tokensUtils";
-import { loginAsync, logoutAsync, signUpAsync } from "./authThunks";
+import { loginAsync, signUpAsync } from "./authThunks";
 
 const setError = (state, action) => {
   state.tokens = null;
   state.loading = false;
   state.error = action.payload;
   state.isAuthenticated = false;
-  state.username = null;
+  state.userId = null;
 };
 
 const setLoading = (state) => {
@@ -41,7 +40,7 @@ const authSlice = createSlice({
     clearAuthState: (state) => {
       state.tokens = null;
       state.isAuthenticated = false;
-      state.username = null;
+      state.userId = null;
       state.loading = false;
       state.error = null;
     },
@@ -53,7 +52,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.tokens = action.payload;
         state.isAuthenticated = true;
-        state.username = getUserIdFromToken(action.payload.accessToken);
+        state.userId = getUserIdFromToken(action.payload.accessToken);
 
         saveTokensToLocalStorage(action.payload);
       })

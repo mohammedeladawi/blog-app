@@ -27,10 +27,16 @@ const deletePost = async (postId) => {
   return response.data;
 };
 
+const updatePost = async (postId, updatedPost) => {
+  const response = await axiosInstance.put(`post/${postId}`, updatedPost);
+  return response.data;
+};
+
 export {
   getLatestPosts,
   getPaginatedPosts,
   getPostBySlug,
   createPost,
   deletePost,
+  updatePost,
 };
