@@ -18,9 +18,8 @@ const LoginForm = () => {
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
-      // ========= Todo: remove initial values before production ===========
-      username: "mohammed",
-      password: "123456",
+      username: "",
+      password: "",
     },
     validationSchema: loginScheme,
     onSubmit: (creds) => {
@@ -28,11 +27,7 @@ const LoginForm = () => {
     },
   });
   return (
-    <Form
-      style={{ maxWidth: "400px" }}
-      className="border p-4 my-4 mx-auto"
-      onSubmit={formik.handleSubmit}
-    >
+    <Form style={{}} className="" onSubmit={formik.handleSubmit}>
       {auth.error && <Alert variant="danger">{auth.error}</Alert>}
       <InputField
         label="Username"
@@ -43,7 +38,7 @@ const LoginForm = () => {
       />
       <InputField
         label="Password"
-        type="text"
+        type="password"
         name="password"
         placeholder="Enter your password"
         formik={formik}

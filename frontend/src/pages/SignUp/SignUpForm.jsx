@@ -18,11 +18,10 @@ const SignUpForm = () => {
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
-      // ========= Todo: remove initial values before production ===========
-      username: "mohammed",
-      email: "mohammed@yahoo.com",
-      password: "123456",
-      confirmPassword: "123456",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       approved: false,
     },
     validationSchema: signUpScheme,
@@ -38,11 +37,7 @@ const SignUpForm = () => {
   });
 
   return (
-    <Form
-      style={{ maxWidth: "450px" }}
-      className="border p-4 my-4 mx-auto"
-      onSubmit={formik.handleSubmit}
-    >
+    <Form onSubmit={formik.handleSubmit}>
       {auth.error && <Alert variant="danger">{auth.error}</Alert>}
       <InputField
         label="Username"

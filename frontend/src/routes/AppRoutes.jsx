@@ -7,6 +7,7 @@ import SignUp from "pages/SignUp";
 import Posts from "pages/Posts";
 import CreatePost from "pages/CreatePost";
 import SinglePost from "pages/SinglePost";
+import NotFound from "pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -26,7 +27,7 @@ const AppRoutes = () => {
         <Route path=":slug" element={<SinglePost />} />
       </Route>
 
-      <Route path="*" element={<div>404 Not Found</div>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

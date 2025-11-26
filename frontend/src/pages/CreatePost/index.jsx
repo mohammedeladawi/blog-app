@@ -6,22 +6,10 @@ import PostFromFields from "../../components/post/PostFormFields";
 import useFormState from "hooks/useFormState";
 
 const initialState = {
-  title: "10 Tips for Writing Clean Code",
-  summary:
-    "Learn how to write maintainable, readable, and efficient code with these practical tips.",
-  imageUrl: "https://picsum.photos/600/400?random=10",
-  content: `
-    <p>Writing clean code is essential for maintainability and collaboration.</p>
-    <p>Here are some tips:</p>
-    <ul>
-      <li>Use meaningful variable and function names.</li>
-      <li>Keep functions small and focused.</li>
-      <li>Write comments only when necessary.</li>
-      <li>Follow consistent formatting and styling.</li>
-      <li>Refactor regularly to improve readability.</li>
-    </ul>
-    <p>Implementing these habits will make your code easier to read, debug, and extend.</p>
-  `,
+  title: "",
+  summary: "",
+  imageUrl: "",
+  content: "",
 };
 
 const CreatePost = () => {
