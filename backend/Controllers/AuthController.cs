@@ -21,57 +21,30 @@ namespace Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUpAsync(SignUpDto signUpDto)
         {
-            try
-            {
-                await _authService.SignUpAsync(signUpDto);
-                return Ok("Account has been created successfully");
-            }
-            catch (Exception err)
-            {
-                return BadRequest(err.Message);
-            }
+            await _authService.SignUpAsync(signUpDto);
+            return Ok("Account has been created successfully");
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<TokensDto>> LoginAsync(LoginDto loginDto)
         {
-            try
-            {
-                TokensDto? tokensDto = await _authService.LoginAsync(loginDto);
-                return Ok(tokensDto);
-            }
-            catch (Exception err)
-            {
-                return BadRequest(err.Message);
-            }
+            TokensDto? tokensDto = await _authService.LoginAsync(loginDto);
+            return Ok(tokensDto);
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> LogoutAsync(RefreshTokenRequestDto request)
         {
-            try
-            {
-                await _authService.LogoutAsync(request.RefreshToken);
-                return NoContent();
-            }
-            catch (Exception err)
-            {
-                return BadRequest(err.Message);
-            }
+            await _authService.LogoutAsync(request.RefreshToken);
+            return NoContent();
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokensDto>> RefreshAccessToken(RefreshTokenRequestDto request)
         {
-            try
-            {
-                TokensDto tokensDto = await _authService.RefreshAccessTokenAsync(request.RefreshToken);
-                return Ok(tokensDto);
-            }
-            catch (Exception err)
-            {
-                return BadRequest(err.Message);
-            }
+
+            TokensDto tokensDto = await _authService.RefreshAccessTokenAsync(request.RefreshToken);
+            return Ok(tokensDto);
         }
     }
 }

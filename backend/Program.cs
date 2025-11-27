@@ -5,6 +5,7 @@ using Interfaces.IRepositories;
 using Interfaces.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Middlewares;
 using Repositories;
 using Services;
 
@@ -76,6 +77,8 @@ app.UseCors(policy => policy
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
 
